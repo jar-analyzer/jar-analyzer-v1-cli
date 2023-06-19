@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.n1ar4.db.mapper.MethodMapper">
+    <insert id="insertMethod" useGeneratedKeys="true" keyProperty="methodId" parameterType="MethodEntity">
+        INSERT INTO method_table
+            (method_name, method_desc, is_static, class_name, access)
+        VALUES
+        <foreach collection="list" separator="," item="item">
+            (#{item.methodName}, #{item.methodDesc}, #{item.isStatic}, #{item.className}, #{item.access})
+        </foreach>
+    </insert>
+</mapper>
