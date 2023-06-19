@@ -4,42 +4,40 @@
 ![](https://img.shields.io/github/downloads/4ra1n/jar-analyzer-cli/total)
 ![](https://img.shields.io/github/v/release/4ra1n/jar-analyzer-cli)
 
-[English Version](doc/README.md)
+## Introduction
 
-## 介绍
+This project is the command-line version of [Jar Analyzer](https://github.com/4ra1n/jar-analyzer), which is easier to use and allows for better customization of analysis and search.
 
-该项目是 [Jar Analyzer](https://github.com/4ra1n/jar-analyzer) 的命令行版本，更容易上手，更好的自定义分析与搜索
+How it works:
+- Automatically analyzes the content of all `class` files and builds a database based on the input `jar` file or `jars` directory.
+- Built-in `jython` interpreter and commonly used search scripts allow for simple commands to search the constructed database.
+- If the built-in scripts do not meet your needs, you can write your own scripts and execute queries through the `jython` interpreter.
 
-运行的原理：
-- 根据输入的 `jar` 文件或者 `jars` 目录，自动分析所有的 `class` 文件内容，并构建数据库
-- 内置 `jython` 解释器以及常用搜索脚本，简单的命令即可通过构建的数据库进行搜索
-- 如果内置脚本不满足你的需求，可以自行编写脚本通过 `jython` 解释器执行查询
+Compared to the `Jar Analyzer GUI` version, which saves all analysis results in an in-memory `HashMap`, the command-line version saves analysis data in an `sqlite` database, making it more meaningful. For example, it can achieve the effect of **building the database once and analyzing it multiple times**, or customizing search using `sql` statements and `python` scripts.
 
-相比 `Jar Analyzer GUI` 版将所有分析结果保存在内存 `HashMap` 中，命令行版将分析数据保存在 `sqlite` 数据库中会更有意义，例如可以做到**一次构建多次分析**的效果，或者自行编写 `sql` 语句和 `python` 脚本进行自定义搜索
+## Quick Start
 
-## 快速开始
+This quick start section uses the `rt.jar` file in the `Java` runtime environment as an example for analysis. More specific analysis cases will be provided later.
 
-快速开始部分以 `Java` 运行时环境 `rt.jar` 为例进行分析，更具体的分析案例会在后续给出
+For example, in `JDK 8` under `Windows`, you can find the `rt.jar` file in `C:\Program Files\Java\jdk1.8.0_202\jre\lib`.
 
-以 `Windows` 环境下的 `JDK 8` 为例，可以从 `C:\Program Files\Java\jdk1.8.0_202\jre\lib` 下得到 `rt.jar` 文件
-
-（1）使用 `build` 命令构建数据库
+(1) Use the `build` command to build the database.
 
 ```shell
 java -jar jar-analyzer-cli.jar build --jar rt.jar
 ```
 
-输出如下，在我的机器配置下，构建 `rt.jar` 数据库需要 `34` 秒（这是已经对 `sql` 语句进行优化后的结果）
+On my machine configuration, building the `rt.jar` database takes `34` seconds (this is the result after optimizing the `sql` statement).
 
-当构建完成后，你当前目录应该会有一个 `jar-analyzer.db` 文件
+When the build is complete, you should have a `jar-analyzer.db` file in your current directory.
 
-（2）查看内置模块
+(2) View built-in modules
 
 ```shell
 java -jar jar-analyzer-cli.jar analyze --list
 ```
 
-输出如下：
+Output:
 
 ```text
      ____.                 _____                .__
@@ -73,44 +71,44 @@ java -jar jar-analyzer-cli.jar analyze --list
 └────────────────────────┴────────────────────────────────────────────────────────┘
 ```
 
-关于这些 `module` 进一步的说明：
-- search-class-name: 输入完全类名得到这个类来自哪个 `jar` ，父类名信息（最基本的搜索）
-- search-class-member: 输入成员名称和类型，搜索该属性在哪些类中可以找到
-- search-member-in-class: 输入完全类名得到这个类中所有成员的信息
-- search-method-callee: 根据 `callee` 类和方法名搜索所有 `caller` 信息（即搜索哪里调用了某个方法）
-- search-method-caller: 根据 `caller` 类和方法名搜索所有 `callee` 信息（即搜索某个方法调用了哪些方法）
-- search-method-name: 根据方法名搜索类名等信息（最基本的搜索）
-- search-spring-controller: 搜索所有符合 `Spring Controller` 规范的类（通过注解信息）
-- search-spring-mapping: 搜索所有符合 `Spring Mapping` 的方法（通过注解信息）
-- search-string: 搜索哪些类中包含了指定的字符串常量内容
-- search-string-in-class: 输入完全类名得到这个类中所有方法中包含的字符串常量信息
+Further explanation on these `modules`:
+- `search-class-name`: Input the fully qualified class name to get information on which `jar` the class comes from and its parent class name (the most basic search).
+- `search-class-member`: Input the member name and type to search for which classes contain this property.
+- `search-member-in-class`: Input the fully qualified class name to get information on all members in this class.
+- `search-method-callee`: Search for all `caller` information based on the `callee` class and method name (i.e., search where a method is called).
+- `search-method-caller`: Search for all `callee` information based on the `caller` class and method name (i.e., search which methods are called by a method).
+- `search-method-name`: Search for class names and other information based on method names (the most basic search).
+- `search-spring-controller`: Search for all classes that meet the `Spring Controller` specification (through annotation information).
+- `search-spring-mapping`: Search for all methods that meet the `Spring Mapping` specification (through annotation information).
+- `search-string`: Search for which classes contain specified string constant content.
+- `search-string-in-class`: Input the fully qualified class name to get information on all string constants contained in this class's methods.
 
-（3）执行查询
+(3) Perform the query
 
-**示例一：搜索 `java/lang/Runtime` 类基本信息**
+**Example 1: Search for basic information on the `java/lang/Runtime` class.**
 
 ```shell
 java -jar jar-analyzer-cli-0.0.1.jar analyze --db jar-analyzer.db --script search-class-name --input java/lang/Runtime --output result.txt
 ```
 
-显示：
+Output:
 
 ```text
 jar_name:rt.jar   super_class_name:java/lang/Object   is_interface:false   class_name:java/lang/Runtime   
 ```
 
-结果分析：
-- `java/lang/Runtime` 类不是接口类型
-- 来自 `rt.jar` 文件
-- 父类是 `java/lang/Object`
+Analysis of the result:
+- The `java/lang/Runtime` class is not an interface type.
+- It comes from the `rt.jar` file.
+- Its parent class is `java/lang/Object`.
 
-**示例二：搜索 `java/util/HashMap` 类的所有成员**
+**Example 2: Search for all members of the `java/util/HashMap` class.**
 
 ```shell
 java -jar jar-analyzer-cli-0.0.1.jar analyze --db jar-analyzer.db --script search-member-in-class --input java/util/HashMap --output result.txt
 ```
 
-显示：
+Output:
 
 ```text
 type_class_name:[Ljava/util/HashMap$Node;   member_name:table   modifiers:transient   modifiers_int:128   class_name:java/util/HashMap   
@@ -121,17 +119,17 @@ type_class_name:I   member_name:threshold   modifiers:   modifiers_int:0   class
 type_class_name:F   member_name:loadFactor   modifiers:final   modifiers_int:16   class_name:java/util/HashMap   
 ```
 
-结果分析：
-- `java/util/HashMap` 类中包含了 `threshold` 等 6 个成员
-- 例如 `size` 成员是 `int` 类型修饰符为 `transient`
+Result Analysis:
+- The class `java/util/HashMap` has 6 members, among which `threshold` is included.
+- For instance, the member `size` is of type `int` and is declared with the modifier `transient`.
 
-**示例三：搜索哪些类里有 `I` 类型（`int`）且名称是 `size` 的成员**
+**Example 3: Search for classes that have a member of type `int` and named `size`.**
 
 ```shell
 java -jar jar-analyzer-cli-0.0.1.jar analyze --db jar-analyzer.db --script search-class-member --input "size|I" --output result.txt
 ```
 
-显示：
+Output:
 
 ```text
 type_class_name:I   member_name:size   modifiers:   modifiers_int:0   class_name:com/sun/corba/se/impl/orbutil/CacheTable   
@@ -145,16 +143,16 @@ type_class_name:I   member_name:size   modifiers:private   modifiers_int:2   cla
 ......
 ```
 
-结果分析：
-- 存在很多类有这样的属性
+Result Analysis:
+- There are many classes that have such properties.
 
-**示例四：搜索哪些方法调用了 `Runtime.exec` 方法**
+**Example 4: Search for methods that call the `Runtime.exec` method.**
 
 ```shell
 java -jar jar-analyzer-cli-0.0.1.jar analyze --db jar-analyzer.db --script search-method-callee --input "java/lang/Runtime|exec" --output result.txt
 ```
 
-显示：
+Output:
 
 ```text
 caller_method_name:exec   caller_class_name:java/lang/Runtime   caller_method_desc:(java.lang.String[]) -> java.lang.Process   caller_method_desc_native:([Ljava/lang/String;)Ljava/lang/Process;   
@@ -165,16 +163,16 @@ caller_method_name:run   caller_class_name:sun/net/www/MimeLauncher   caller_met
 .....
 ```
 
-结果分析：
-- 虽然找到了很多地方，但存在很多同名且 `desc` 不同的方法
+Result Analysis:
+- Though many places have been found, there are many methods with the same name but different `desc`.
 
-那么如何精确到传入一个 `String` 返回 `Process` 的 `exec` 方法呢
+How to precisely search for the `exec` method that takes a `String` as input and returns a `Process` object?
 
 ```shell
 java -jar jar-analyzer-cli-0.0.1.jar analyze --db jar-analyzer.db --script search-method-callee --input "java/lang/Runtime|exec|(Ljava/lang/String;)Ljava/lang/Process;" --output result.txt
 ```
 
-显示：
+Output:
 
 ```text
 caller_method_name:registerUsage   caller_class_name:sun/usagetracker/UsageTrackerClient   caller_method_desc:(long) -> void   caller_method_desc_native:(J)V   
@@ -183,16 +181,16 @@ caller_method_name:activate   caller_class_name:com/sun/corba/se/impl/activation
 caller_method_name:verify   caller_class_name:com/sun/corba/se/impl/activation/ServerTableEntry   caller_method_desc:() -> int   caller_method_desc_native:()I   
 ```
 
-结果分析：
-- 在 `rt.jar` 中找到了四处调用 `Runtime.exec` 且传入一个 `String` 的情况
+Result Analysis:
+- Four cases have been found in `rt.jar` where `Runtime.exec` is called with a `String` argument.
 
-**示例五：搜索 `com/sun/rowset/JdbcRowSetImpl` 类的 `connect` 方法中调用了哪些方法**
+**Example 5: Search for methods called within the `connect` method of the class `com/sun/rowset/JdbcRowSetImpl`.**
 
 ```shell
 java -jar jar-analyzer-cli-0.0.1.jar analyze --db jar-analyzer.db --script search-method-caller --input "com/sun/rowset/JdbcRowSetImpl|connect" --output result.txt
 ```
 
-显示：
+Output:
 
 ```text
 callee_method_name:getConnection   callee_method_desc:() -> java.sql.Connection   callee_method_desc_native:()Ljava/sql/Connection;   callee_class_name:javax/sql/DataSource   
@@ -207,24 +205,22 @@ callee_method_name:lookup   callee_method_desc:(java.lang.String) -> java.lang.O
 ......
 ```
 
-结果分析：
-- 其中包含了 `javax/naming/Context` 的 `lookup` 方法，有潜在的安全问题
+Result Analysis:
+- The `lookup` method of `javax/naming/Context` is included, which has potential security concerns.
 
-**示例六：搜索 `com/sun/rowset/JdbcRowSetImpl` 类包含了哪些字符串常量**
+**Example 6: Search for string constants contained in the class `com/sun/rowset/JdbcRowSetImpl`.**
 
 ```shell
 java -jar jar-analyzer-cli-0.0.1.jar analyze --db jar-analyzer.db --script search-string-in-class --input com/sun/rowset/JdbcRowSetImpl --output result.txt
 ```
 
-结果过多不再展示
+## Issues
 
-## 常见问题
+**(1) Do you support more customized queries?**
 
-**（1）是否支持更加自定义的查询？**
+Sure, you can write your own Python script and load it to execute the query.
 
-可以自行编写 `python` 脚本并加载后执行查询
-
-这是一个脚本模板：
+Here's a script template:
 
 ```python
 from me.n1ar4.analyze import db_instance
@@ -242,13 +238,13 @@ for item in list(result):
         print(k, v)
 ```
 
-使用命令：
+Command:
 
 ```shell
 java -jar jar-analyzer-cli-0.0.1.jar analyze --db jar-analyzer.db --file test.py --input test --output test
 ```
 
-控制台输出：
+Output:
 
 ```text
      ____.                 _____                .__
@@ -265,28 +261,28 @@ java -jar jar-analyzer-cli-0.0.1.jar analyze --db jar-analyzer.db --file test.py
 17:39:22 [main] AnalyzerRunner.start close python interpreter success
 ```
 
-注意：
-- `input` 和 `output` 参数从外部注入，通过命令行传递
-- `db_instance` 函数根据传入的数据库名称连接
-- **运行脚本不需要本地有 `python` 环境**，本项目内置了 `jython`
+Noted:
+- The `input` and `output` parameters are injected from outside and passed through the command line.
+- The `db_instance` function connects to the database based on the given database name.
+- Running the script does not require a local `Python` environment since `Jython` is included in the project.
 
-**（1）怎样支持多个 `jar` 文件构建数据库？**
+**(2) How to support building a database with multiple jar files?**
 
-命令支持传入一个 `jar` 目录
+The command supports passing in a directory of jar files.
 
-示例：加载 `Tomcat` 所有依赖 `jar` 进行分析
+Example: Load all dependent jar files of Tomcat for analysis.
 
 ```shell
 java -jar jar-analyzer-cli-0.0.1.jar build --jar "D:\apache-tomcat-8.5.85\lib"
 ```
 
-搜索其中存在 `readObject` 调用的地方
+You can use the following command to search for places where readObject is called:
 
 ```shell
 java -jar jar-analyzer-cli-0.0.1.jar analyze --db jar-analyzer.db --script search-method-callee --input "java/io/ObjectInputStream|readObject" --output result.txt
 ```
 
-显示：
+Output:
 
 ```text
 caller_method_name:readObject   caller_class_name:org/apache/tomcat/dbcp/pool2/impl/LinkedBlockingDeque   caller_method_desc:(java.io.ObjectInputStream) -> void   caller_method_desc_native:(Ljava/io/ObjectInputStream;)V   
@@ -298,4 +294,4 @@ caller_method_name:deserialize   caller_class_name:org/apache/catalina/tribes/io
 caller_method_name:deserialize   caller_class_name:org/apache/tomcat/dbcp/dbcp2/datasources/InstanceKeyDataSourceFactory   caller_method_desc:(byte[]) -> java.lang.Object   caller_method_desc_native:([B)Ljava/lang/Object;   
 ```
 
-这里面包含了 `CVE-2020-9484 Tomcat Session RCE` 的漏洞触发点（已修复）
+This search result includes the trigger point for the `CVE-2020-9484 Tomcat Session RCE` vulnerability (which has been fixed).
