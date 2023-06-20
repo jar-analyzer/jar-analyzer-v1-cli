@@ -296,6 +296,104 @@ caller_method_name:deserialize   caller_class_name:org/apache/tomcat/dbcp/dbcp2/
 
 This search result includes the trigger point for the `CVE-2020-9484 Tomcat Session RCE` vulnerability (which has been fixed).
 
+## About
+
+(1) caller & callee
+
+```java
+class Test{
+    void a(){
+        new Test().b();
+    }
+    
+    void b(){
+        Test.c();
+    }
+    
+    static void c(){
+        // code
+    }
+}
+```
+
+Method  `a` the `caller` is `a` method, and `callee` is `b`
+
+Method `b` 中 `caller` is `b` method, and `callee` is `c`
+
+(2) how to resolve impl
+
+```java
+class Demo{
+    void demo(){
+        new Test().test();
+    }
+}
+
+interface Test {
+    void test();
+}
+
+class Test1Impl implements Test {
+    @Override
+    public void test() {
+        // code
+    }
+}
+
+class Test2Impl implements Test {
+    @Override
+    public void test() {
+        // code
+    }
+}
+```
+
+Now we have `Demo.demo -> Test.test` data, in fact it is `Demo.demo -> TestImpl.test`.
+
+So we add rules `Test.test -> Test1Impl.test` and `Test.test -> Test2Impl.test`.
+
+Make sure that we do not lost data
+- `Demo.demo -> Test.test`
+- `Test.test -> Test1Impl.test`/`Test.test -> Test2Impl.test`
+
+(3) how to resolve inherit
+
+```java
+class Zoo{
+    void run(){
+        Animal dog = new Dog();
+        dog.eat();
+    }
+}
+
+class Animal {
+    void eat() {
+        // code
+    }
+}
+
+class Dog extends Animal {
+    @Override
+    void eat() {
+        // code
+    }
+}
+
+class Cat extends Animal {
+    @Override
+    void eat() {
+        // code
+    }
+}
+```
+`Zoo.run -> dog.cat` bytecode is `INVOKEVIRTUAL Animal.eat ()V`, but we only have `Zoo.run -> Animal.eat`, lost `Zoo.run -> Dog.eat` rule
+
+In this case, I add `Animal.eat -> Dog.eat` and `Animal.eat -> Cat.eat`
+
+Make sure that we do not lost data
+- `Zoo.run -> Animal.eat`
+- `Animal.eat -> Dog.eat`/`Animal.eat -> Cat.eat`
+
 ## Thanks
 
 <img src="https://resources.jetbrains.com/storage/products/company/brand/logos/IntelliJ_IDEA.svg" alt="IntelliJ IDEA logo.">
