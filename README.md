@@ -299,3 +299,11 @@ caller_method_name:deserialize   caller_class_name:org/apache/tomcat/dbcp/dbcp2/
 ```
 
 这里面包含了 `CVE-2020-9484 Tomcat Session RCE` 的漏洞触发点（已修复）
+
+## Thanks
+
+<img src="https://resources.jetbrains.com/storage/products/company/brand/logos/IntelliJ_IDEA.svg" alt="IntelliJ IDEA logo.">
+
+
+This project is developed using JetBrains IDEA.
+Thanks to JetBrains for providing me with a free license, which is a strong support for me.
