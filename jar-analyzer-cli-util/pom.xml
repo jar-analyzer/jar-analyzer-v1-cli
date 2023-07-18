@@ -6,7 +6,7 @@
     <parent>
         <groupId>me.n1ar4</groupId>
         <artifactId>jar-analyzer-cli</artifactId>
-        <version>0.0.1</version>
+        <version>0.0.3</version>
     </parent>
 
     <artifactId>jar-analyzer-cli-util</artifactId>
@@ -16,12 +16,12 @@
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
     <dependencies>
         <dependency>
             <groupId>me.n1ar4</groupId>
             <artifactId>jar-analyzer-cli-db</artifactId>
-            <version>0.0.1</version>
-            <scope>compile</scope>
+            <version>0.0.3</version>
         </dependency>
     </dependencies>
 

@@ -6,7 +6,7 @@
     <parent>
         <groupId>me.n1ar4</groupId>
         <artifactId>jar-analyzer-cli</artifactId>
-        <version>0.0.1</version>
+        <version>0.0.3</version>
     </parent>
 
     <artifactId>jar-analyzer-cli-core</artifactId>
@@ -19,21 +19,14 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>32.0.1-jre</version>
-        </dependency>
-        <dependency>
             <groupId>me.n1ar4</groupId>
             <artifactId>jar-analyzer-cli-db</artifactId>
-            <version>0.0.1</version>
-            <scope>compile</scope>
+            <version>0.0.3</version>
         </dependency>
         <dependency>
             <groupId>me.n1ar4</groupId>
             <artifactId>jar-analyzer-cli-util</artifactId>
-            <version>0.0.1</version>
-            <scope>compile</scope>
+            <version>0.0.3</version>
         </dependency>
     </dependencies>
 

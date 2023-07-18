@@ -6,7 +6,7 @@
 
     <groupId>me.n1ar4</groupId>
     <artifactId>jar-analyzer-cli</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.3</version>
 
     <packaging>pom</packaging>
 
@@ -15,7 +15,6 @@
         <module>jar-analyzer-cli-starter</module>
         <module>jar-analyzer-cli-util</module>
         <module>jar-analyzer-cli-core</module>
-        <module>jar-analyzer-cli-analyze</module>
     </modules>
 
     <properties>
