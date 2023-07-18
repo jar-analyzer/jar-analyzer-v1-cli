@@ -6,7 +6,7 @@
     <parent>
         <groupId>me.n1ar4</groupId>
         <artifactId>jar-analyzer-cli</artifactId>
-        <version>0.0.3</version>
+        <version>0.0.4</version>
     </parent>
 
     <artifactId>jar-analyzer-cli-core</artifactId>
@@ -21,12 +21,12 @@
         <dependency>
             <groupId>me.n1ar4</groupId>
             <artifactId>jar-analyzer-cli-db</artifactId>
-            <version>0.0.3</version>
+            <version>0.0.4</version>
         </dependency>
         <dependency>
             <groupId>me.n1ar4</groupId>
             <artifactId>jar-analyzer-cli-util</artifactId>
-            <version>0.0.3</version>
+            <version>0.0.4</version>
         </dependency>
     </dependencies>
 
