@@ -15,5 +15,5 @@ none
 
 ## 0.0.4
 
-- 新增参数 output 和 delete-exist 指定输出和删除已存在
+- 新增参数 delete-exist 指定删除已存在防止误删
 - 修改 LOG4J 配置文件显示日志级别

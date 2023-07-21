@@ -41,14 +41,7 @@ public class Application {
             logger.error("jar file not exist");
             return;
         }
-        String outDB = buildCmd.getOutput();
-        if (StringUtil.isNull(outDB)) {
-            outDB = "jar-analyzer.db";
-            logger.info("use default output: jar-analyzer.db");
-        } else {
-            logger.info("use output: {}", buildCmd.getOutput());
-        }
-        Path outDBPath = Paths.get(outDB);
+        Path outDBPath = Paths.get("jar-analyzer.db");
         if (Files.exists(outDBPath)) {
             logger.info("output db file exists");
             if (buildCmd.isDeleteExist()) {
@@ -64,6 +57,6 @@ public class Application {
                 return;
             }
         }
-        Runner.run(jarPath, outDBPath);
+        Runner.run(jarPath);
     }
 }
