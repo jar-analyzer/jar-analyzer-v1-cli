@@ -15,7 +15,7 @@ import java.util.*;
 public class Runner {
     private static final Logger logger = LogManager.getLogger(Runner.class);
 
-    public static void run(Path jarPath) {
+    public static void run(Path jarPath,Path outDB) {
         List<ClassFileEntity> cfs;
         if (Files.isDirectory(jarPath)) {
             logger.info("your input is a directory");

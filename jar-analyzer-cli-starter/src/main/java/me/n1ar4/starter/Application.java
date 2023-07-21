@@ -13,7 +13,6 @@ import java.nio.file.Paths;
 public class Application {
     private static final Logger logger = LogManager.getLogger(Application.class);
     private static final BuildCmd buildCmd = new BuildCmd();
-    private static final Path dbPath = Paths.get("jar-analyzer.db");
 
     public static void main(String[] args) {
         Logo.printLogo();
@@ -42,10 +41,26 @@ public class Application {
             logger.error("jar file not exist");
             return;
         }
-        try {
-            Files.delete(dbPath);
-        } catch (Exception ignored) {
+        String outDB = buildCmd.getOutput();
+        if (StringUtil.isNull(outDB)) {
+            outDB = "jar-analyzer.db";
+            logger.info("use default output: jar-analyzer.db");
+        }else{
+            logger.info("use output: {}",buildCmd.getOutput());
         }
-        Runner.run(jarPath);
+        Path outDBPath = Paths.get(outDB);
+        if(Files.exists(outDBPath)) {
+            logger.info("output db file exists");
+            if (buildCmd.isDeleteExist()){
+                try {
+                    Files.delete(outDBPath);
+                } catch (Exception ignored) {
+                }
+            }else{
+                logger.warn("stop because db file exists");
+                return;
+            }
+        }
+        Runner.run(jarPath,outDBPath);
     }
 }
