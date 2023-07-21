@@ -15,4 +15,5 @@ none
 
 ## 0.0.4
 
-todo
+- 新增参数 output 和 delete-exist 指定输出和删除已存在
+- 修改 LOG4J 配置文件显示日志级别
