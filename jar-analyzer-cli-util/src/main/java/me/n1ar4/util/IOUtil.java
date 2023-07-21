@@ -8,7 +8,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class IOUtil {
-    private static final Logger logger = LogManager.getLogger(IOUtil.class);
+    private static final Logger logger = LogManager.getLogger();
 
     public static void copy(InputStream inputStream, OutputStream outputStream) {
         try {
@@ -18,7 +18,7 @@ public class IOUtil {
                 outputStream.write(buffer, 0, n);
             }
         } catch (Exception e) {
-            logger.error("error ", e);
+            logger.error("错误: {}", e.toString());
         }
     }
 }

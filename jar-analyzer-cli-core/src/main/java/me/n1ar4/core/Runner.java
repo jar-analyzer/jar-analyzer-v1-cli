@@ -13,32 +13,32 @@ import java.nio.file.Path;
 import java.util.*;
 
 public class Runner {
-    private static final Logger logger = LogManager.getLogger(Runner.class);
+    private static final Logger logger = LogManager.getLogger();
 
     public static void run(Path jarPath) {
         List<ClassFileEntity> cfs;
         if (Files.isDirectory(jarPath)) {
-            logger.info("your input is a directory");
+            logger.info("你输入的是一个Jar目录");
             List<String> files = DirUtil.GetFiles(jarPath.toAbsolutePath().toString());
             for (String s : files) {
                 DB.saveJar(s);
             }
             cfs = CoreUtil.getAllClassesFromJars(files);
         } else {
-            logger.info("your input is a jar");
+            logger.info("你输入的是一个Jar文件");
             List<String> jarList = new ArrayList<>();
             jarList.add(jarPath.toAbsolutePath().toString());
             DB.saveJar(jarList.get(0));
             cfs = CoreUtil.getAllClassesFromJars(jarList);
         }
         Env.classFileList.addAll(cfs);
-        logger.info("get all class files");
+        logger.info("尝试获取所有Class文件");
         DB.saveClassFiles(Env.classFileList);
         Discovery.start(Env.classFileList, Env.discoveredClasses,
                 Env.discoveredMethods, Env.classMap, Env.methodMap);
         DB.saveClassInfo(Env.discoveredClasses);
         DB.saveMethods(Env.discoveredMethods);
-        logger.info("discovery finish");
+        logger.info("基础Class信息收集完毕");
         for (MethodReference mr : Env.discoveredMethods) {
             ClassReference.Handle ch = mr.getClassReference();
             if (Env.methodsInClassMap.get(ch) == null) {
@@ -53,11 +53,11 @@ public class Runner {
         }
         MethodCall.start(Env.classFileList, Env.methodCalls);
         Env.inheritanceMap = Inheritance.derive(Env.classMap);
-        logger.info("build inheritance finish");
+        logger.info("构建继承关系完毕");
         Map<MethodReference.Handle, Set<MethodReference.Handle>> implMap =
                 Inheritance.getAllMethodImplementations(Env.inheritanceMap, Env.methodMap);
         DB.saveImpls(implMap);
-        logger.info("build implementations finish");
+        logger.info("构建实现关系完毕");
         for (Map.Entry<MethodReference.Handle, Set<MethodReference.Handle>> entry :
                 implMap.entrySet()) {
             MethodReference.Handle k = entry.getKey();
@@ -66,7 +66,7 @@ public class Runner {
             calls.addAll(v);
         }
         DB.saveMethodCalls(Env.methodCalls);
-        logger.info("build extra method calls finish");
+        logger.info("根据继承关系构建额外的方法调用关系完毕");
         for (ClassFileEntity file : Env.classFileList) {
             try {
                 StringClassVisitor dcv = new StringClassVisitor(Env.strMap, Env.classMap, Env.methodMap);

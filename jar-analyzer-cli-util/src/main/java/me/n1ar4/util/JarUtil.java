@@ -15,7 +15,7 @@ import java.util.jar.JarInputStream;
 
 @SuppressWarnings("all")
 public class JarUtil {
-    private static final Logger logger = LogManager.getLogger(JarUtil.class);
+    private static final Logger logger = LogManager.getLogger();
     private static final Set<ClassFileEntity> classFileSet = new HashSet<>();
 
     public static List<ClassFileEntity> resolveNormalJarFile(String jarPath) {
@@ -29,7 +29,7 @@ public class JarUtil {
             resolve(jarPath, tmpDir);
             return new ArrayList<>(classFileSet);
         } catch (Exception e) {
-            logger.error("error {}", e.toString());
+            logger.error("错误: {}", e.toString());
         }
         return new ArrayList<>();
     }
@@ -37,7 +37,7 @@ public class JarUtil {
     private static void resolve(String jarPathStr, Path tmpDir) {
         Path jarPath = Paths.get(jarPathStr);
         if (!Files.exists(jarPath)) {
-            logger.error("jar not exist");
+            logger.error("jar文件不存在");
             return;
         }
         try {
@@ -95,7 +95,7 @@ public class JarUtil {
                 jarInputStream.close();
             }
         } catch (Exception e) {
-            logger.error("error: {}", e.toString());
+            logger.error("错误: {}", e.toString());
         }
     }
 
@@ -133,7 +133,7 @@ public class JarUtil {
             is.close();
             jarInputStream.close();
         } catch (Exception e) {
-            logger.error("error: {}", e.toString());
+            logger.error("错误: {}", e.toString());
         }
     }
 }

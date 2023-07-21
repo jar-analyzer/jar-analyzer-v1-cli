@@ -14,10 +14,10 @@ import java.util.List;
 import java.util.Set;
 
 public class CoreUtil {
-    private static final Logger logger = LogManager.getLogger(CoreUtil.class);
+    private static final Logger logger = LogManager.getLogger();
 
     public static List<ClassFileEntity> getAllClassesFromJars(List<String> jarPathList) {
-        logger.info("get all classes");
+        logger.info("收集所有Jar的所有Class文件");
         Set<ClassFileEntity> classFileSet = new HashSet<>();
         Path temp = Paths.get("jar-analyzer-cli-temp");
         try {

@@ -11,11 +11,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class MethodCall {
-    private static final Logger logger = LogManager.getLogger(MethodCall.class);
+    private static final Logger logger = LogManager.getLogger();
 
     public static void start(Set<ClassFileEntity> classFileList, HashMap<MethodReference.Handle,
             HashSet<MethodReference.Handle>> methodCalls) {
-        logger.info("start discovery information");
+        logger.info("分析和收集Class内方法关系");
         for (ClassFileEntity file : classFileList) {
             try {
                 MethodCallClassVisitor mcv =

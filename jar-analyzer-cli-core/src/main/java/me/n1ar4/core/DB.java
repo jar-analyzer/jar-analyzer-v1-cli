@@ -66,12 +66,12 @@ public class DB {
         js.add(en);
         int i = jarMapper.insertJar(js);
         if (i != 0) {
-            logger.debug("save jar file info finish");
+            logger.debug("保存Jar信息到数据库完成");
         }
     }
 
     public static void saveClassFiles(Set<ClassFileEntity> classFileList) {
-        logger.info("class file total: {}", classFileList.size());
+        logger.info("一共有Class文件数量: {}", classFileList.size());
         List<ClassFileEntity> list = new ArrayList<>();
         for (ClassFileEntity classFile : classFileList) {
             classFile.setPathStr(classFile.getPath().toAbsolutePath().toString());
@@ -81,14 +81,14 @@ public class DB {
         for (List<ClassFileEntity> data : partition) {
             int a = classFileMapper.insertClassFile(data);
             if (a == 0) {
-                logger.warn("save class file error");
+                logger.warn("保存失败");
             }
         }
-        logger.info("save class file info finish");
+        logger.info("保存Class文件信息到数据库完成");
     }
 
     public static void saveClassInfo(Set<ClassReference> discoveredClasses) {
-        logger.info("total class: {}", discoveredClasses.size());
+        logger.info("一共有Class数量: {}", discoveredClasses.size());
         List<ClassEntity> list = new ArrayList<>();
         for (ClassReference reference : discoveredClasses) {
             ClassEntity classEntity = new ClassEntity();
@@ -102,10 +102,10 @@ public class DB {
         for (List<ClassEntity> data : partition) {
             int a = classMapper.insertClass(data);
             if (a == 0) {
-                logger.warn("save class error");
+                logger.warn("保存失败");
             }
         }
-        logger.info("save class info finish");
+        logger.info("保存类信息数据完成");
 
         List<MemberEntity> mList = new ArrayList<>();
         List<AnnoEntity> aList = new ArrayList<>();
@@ -136,32 +136,32 @@ public class DB {
         for (List<MemberEntity> data : mPartition) {
             int a = memberMapper.insertMember(data);
             if (a == 0) {
-                logger.warn("save class member error");
+                logger.warn("保存错误");
             }
         }
-        logger.info("save class member info finish");
+        logger.info("保存类成员信息到数据库完成");
 
         List<List<AnnoEntity>> aPartition = PartitionUtils.partition(aList, 100);
         for (List<AnnoEntity> data : aPartition) {
             int a = annoMapper.insertAnno(data);
             if (a == 0) {
-                logger.warn("save class anno error");
+                logger.warn("保存错误");
             }
         }
-        logger.info("save class anno info finish");
+        logger.info("保存Class注解信息到数据库完成");
 
         List<List<InterfaceEntity>> iPartition = PartitionUtils.partition(iList, 100);
         for (List<InterfaceEntity> data : iPartition) {
             int a = interfaceMapper.insertInterface(data);
             if (a == 0) {
-                logger.warn("save class interface error");
+                logger.warn("保存错误");
             }
         }
-        logger.info("save class interface info finish");
+        logger.info("保存Class接口信息到数据库完成");
     }
 
     public static void saveMethods(Set<MethodReference> discoveredMethods) {
-        logger.info("total methods: {}", discoveredMethods.size());
+        logger.info("一共有方法的数量: {}", discoveredMethods.size());
         List<MethodEntity> mList = new ArrayList<>();
         List<AnnoEntity> aList = new ArrayList<>();
         for (MethodReference reference : discoveredMethods) {
@@ -184,19 +184,19 @@ public class DB {
         for (List<MethodEntity> data : mPartition) {
             int a = methodMapper.insertMethod(data);
             if (a == 0) {
-                logger.warn("save method error");
+                logger.warn("保存错误");
             }
         }
-        logger.info("save method info finish");
+        logger.info("保存方法信息到数据库完成");
 
         List<List<AnnoEntity>> aPartition = PartitionUtils.partition(aList, 100);
         for (List<AnnoEntity> data : aPartition) {
             int a = annoMapper.insertAnno(data);
             if (a == 0) {
-                logger.warn("save method anno error");
+                logger.warn("保存方法注解错误");
             }
         }
-        logger.info("save method anno info finish");
+        logger.info("保存方法注解信息到数据库完成");
     }
 
     public static void saveMethodCalls(HashMap<MethodReference.Handle,
@@ -223,10 +223,10 @@ public class DB {
         for (List<MethodCallEntity> data : mPartition) {
             int a = methodCallMapper.insertMethodCall(data);
             if (a == 0) {
-                logger.warn("save method call error");
+                logger.warn("保存错误");
             }
         }
-        logger.info("save method call info finish");
+        logger.info("保存方法调用关系信息到数据库完成");
     }
 
     public static void saveImpls(Map<MethodReference.Handle, Set<MethodReference.Handle>> implMap) {
@@ -248,10 +248,10 @@ public class DB {
         for (List<MethodImplEntity> data : mPartition) {
             int a = methodImplMapper.insertMethodImpl(data);
             if (a == 0) {
-                logger.warn("save method impl error");
+                logger.warn("保存错误");
             }
         }
-        logger.info("save method impl info finish");
+        logger.info("保存方法实现信息到数据库完成");
     }
 
     public static void saveStrMap(Map<MethodReference.Handle, List<String>> strMap) {
@@ -276,9 +276,9 @@ public class DB {
         for (List<StringEntity> data : mPartition) {
             int a = stringMapper.insertString(data);
             if (a == 0) {
-                logger.warn("save string map error");
+                logger.warn("保存错误");
             }
         }
-        logger.info("save string map info finish");
+        logger.info("保存所有字符串信息到数据库完成");
     }
 }

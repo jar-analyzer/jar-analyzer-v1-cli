@@ -17,7 +17,7 @@ public class Discovery {
                              Set<MethodReference> discoveredMethods,
                              Map<ClassReference.Handle, ClassReference> classMap,
                              Map<MethodReference.Handle, MethodReference> methodMap) {
-        logger.info("start discovery information");
+        logger.info("开始初步Class信息分析与收集");
         for (ClassFileEntity file : classFileList) {
             try {
                 DiscoveryClassVisitor dcv = new DiscoveryClassVisitor(discoveredClasses,
