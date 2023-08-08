@@ -37,6 +37,8 @@ java -jar jar-analyzer-cli.jar build --jar "/path/to/Oracle/wlserver/modules"
 - method_impl_table: 方法实现表
 - method_table: 方法信息表
 
+![image](https://github.com/4ra1n/jar-analyzer-cli/assets/34726933/b2dc2732-c279-4962-8c5d-cb7668323756)
+
 ## Thanks
 
 <img src="https://resources.jetbrains.com/storage/products/company/brand/logos/IntelliJ_IDEA.svg" alt="IntelliJ IDEA logo.">
